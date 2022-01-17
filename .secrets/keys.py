@@ -1,0 +1,2 @@
+api_key='3wJaOTigDWvrVWvszs3GGX5RW1pmsOwEUI5Pzi2SSoXY8VdShFIVeUzbq35gKPSJ'
+secret_key='FvnZQYdXw9lHP7jkubgIcBpzQ2GGsZxdcTJfzJRpMglo9D0NSOaQ13OM0J0OPmlq'
