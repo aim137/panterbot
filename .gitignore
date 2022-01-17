@@ -1,2 +1,3 @@
 .secret/keys.py
 .sup
+__pycache__
