@@ -1,33 +1,22 @@
 #start
 import time
-from panterbot.aux import run_strategy
+from panterbot.aux import trading_session
 from panterbot.data.fetch import get_data
 
-def run(TSDict):
+def go(TSDict):
 
-  if (TSDict['MODE'] == 'TRADE'):
+  if is_trade(TSDict):
     key = input('Vas a usar dinero real? \n')
-    if (key != 'paga la panter'): return
+    #if (key != 'paga la panter'): return
 
-  if (TSDict['MODE'] == 'TRADE') or (TSDict['MODE'] == 'SIMULATION'):
-    print('entering while loop')
-    while True:
-      data = get_data()
-      run_strategy(data,TSDict)
-  else:
-    print('entering backtest')
-    data = get_data(lookback='1440 min ago GMT')
-    l_trade_open = False
-    for t in range(30,len(data)):
-      if (not l_trade_open):
-        l_shouldbuy = run_strategy(data[:t],TSDict)
-        print(l_shouldbuy)
-        if (l_shouldbuy): l_trade_open = True
-      else:
-        l_shouldexit = run_strategy(data[:t],TSDict,l_trade_open = True)
-        print('should I exit? = '+str(l_shouldexit))
-        if (l_shouldexit): l_trade_open = False
-
+  outcome_list = trading_session(TSDict)
+  print('Losses: '+str(outcome_list.count('loss')))
+  print('Wins: '+str(outcome_list.count('profit')))
+  print('Profit: '+str(
+                   outcome_list.count('profit')*.15
+                  -outcome_list.count('loss')*.15
+                      ))
+  
 
 def is_backtest(TSDict):
   if (TSDict['MODE'] == 'TRADE') or (TSDict['MODE'] == 'SIMULATION'):
@@ -63,11 +52,3 @@ def is_trade(TSDict):
 #    l_trade = False
 #    l_realtime = True
 #    l_backtest = False
-  
-#  l_trade_open = False
-#  RUNNING_MODE = 'TRADE'
-#  
-#  while True:
-#    data = fetch.get_data(lookback='30 m ago GMT')
-#    strategies.basicstrategy(data)
-#    time.sleep(60)
