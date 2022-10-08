@@ -32,9 +32,9 @@ def seekexit(data_frame,TSDict,objeto):
 
   if len(data_since_buy) > 0:
     sincebuyreturn = (data_since_buy.Open.pct_change()+1).cumprod() -1
-    if (sincebuyreturn[-1] > 0.0015) or (sincebuyreturn[-1] < -0.0015):
+    if (sincebuyreturn[-1] > 0.03) or (sincebuyreturn[-1] < -0.01):
       objeto['outcome'] = 'profit'
-      if sincebuyreturn[-1] < -0.0015: objeto['outcome'] = 'loss'
+      if sincebuyreturn[-1] < -0.01: objeto['outcome'] = 'loss'
       print('time = '+str(objeto['open_time'])+' - CLOSE TRADE with '+str(objeto['outcome']))
       return False, objeto
     else:

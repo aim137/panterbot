@@ -6,7 +6,7 @@ import keys
 
 client = Client(keys.api_key,keys.secret_key)
 
-def get_data(symbol='BTCUSDT',interval='1m',lookback='30 m ago GMT'):
+def get_data(symbol='BTCGBP',interval='1m',lookback='30 m ago GMT'):
   """ function to get data
   """
 
