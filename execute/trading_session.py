@@ -16,6 +16,20 @@ def trading_session(TSDict):
   l_trade_open=False
   t_skip = None
   outcome_list = []
+  l_mode_RT = pb.is_realtime(TSDict)
+
+ #estoy tratando de unificar las dos.. no se si tene sentido igual...
+ #while l_session_running:
+ #  if not l_mode_RT:
+ #    #then it is a BT (backtest) - I get all data at once
+ #    data = get_data(lookback='111440 min ago GMT')
+ #  if not l_trade_open:
+ #    if l_mode_RT: data = get_data()
+
+
+
+
+
 
   if pb.is_realtime(TSDict):
     while l_session_running:
@@ -32,7 +46,7 @@ def trading_session(TSDict):
         if not l_trade_open : outcome_list.append(objeto['outcome'])
 
   if pb.is_backtest(TSDict):
-    data = get_data(lookback='111440 min ago GMT')
+    data = get_data(lookback='111 min ago GMT')
     for t in range(30,len(data)):
       simul_time = data.index[t]
       if not l_trade_open:
