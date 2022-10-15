@@ -12,11 +12,13 @@ def go(TSDict):
   outcome_list = trading_session(TSDict)
   print('Losses: '+str(outcome_list.count('loss')))
   print('Wins: '+str(outcome_list.count('profit')))
-  print('Profit: '+str(
-                   outcome_list.count('profit')*.3
-                  -outcome_list.count('loss')*.1
-                      ))
+  compound = 1
+  for i in range(len(outcome_list)):
+    if (outcome_list[i] == 'loss'): compound *= (1-TSDict['margin_loss'])
+    if (outcome_list[i] == 'profit'): compound *= (1+TSDict['margin_profit'])
+  print('Profit: '+str((compound-1)*100)+'%')
   print(outcome_list)
+  return compound
   
 
 def is_realtime(TSDict):

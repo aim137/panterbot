@@ -2,6 +2,7 @@ import sys
 from binance import Client
 import pandas as pd
 sys.path.append('/Users/aim/opt/anaconda3/envs/PanterBot/lib/python3.8/site-packages/panterbot/.secrets')
+sys.path.append('/home/maria/Panterbot/panterbot/.secrets')
 import keys
 
 client = Client(keys.api_key,keys.secret_key)

@@ -24,6 +24,9 @@ def seektrade(data_frame,TSDict):
 
 def seekexit(data_frame,TSDict,objeto):
   
+  margin_profit = TSDict['margin_profit']
+  margin_loss   = TSDict['margin_loss']
+
   if pb.is_realtime(TSDict):
     data_for_exit = get_data(lookback='30 m ago GMT')
     data_since_buy = data_for_exit.loc[data_for_exit.index > objeto['open_time']]
@@ -32,9 +35,9 @@ def seekexit(data_frame,TSDict,objeto):
 
   if len(data_since_buy) > 0:
     sincebuyreturn = (data_since_buy.Open.pct_change()+1).cumprod() -1
-    if (sincebuyreturn[-1] > 0.03) or (sincebuyreturn[-1] < -0.01):
+    if (sincebuyreturn[-1] > margin_profit) or (sincebuyreturn[-1] < (-1 * margin_loss)):
       objeto['outcome'] = 'profit'
-      if sincebuyreturn[-1] < -0.01: objeto['outcome'] = 'loss'
+      if sincebuyreturn[-1] < (-1 * margin_loss): objeto['outcome'] = 'loss'
       print('time = '+str(objeto['open_time'])+' - CLOSE TRADE with '+str(objeto['outcome']))
       return False, objeto
     else:

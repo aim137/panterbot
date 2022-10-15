@@ -46,7 +46,7 @@ def trading_session(TSDict):
         if not l_trade_open : outcome_list.append(objeto['outcome'])
 
   if pb.is_backtest(TSDict):
-    data = get_data(lookback='111 min ago GMT')
+    data = get_data(lookback='11117 min ago GMT')
     for t in range(30,len(data)):
       simul_time = data.index[t]
       if not l_trade_open:
