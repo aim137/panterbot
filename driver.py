@@ -31,20 +31,19 @@ def test(TSdict):
     return
  
   CurrentStrategy = strategy_selector(TSdict)
-
-  df = get_data()
-
-  bt = Backtest(df,CurrentStrategy,cash=TSdict['cash'])
-  
+  df = get_data(TSdict)
+  bt = Backtest(df,CurrentStrategy,
+                cash=TSdict['SESSION']['cash'],
+                commission=TSdict['SESSION']['commission'])
   output = bt.run()
-
+  print(output)
   bt.plot()
 
-  return
+  return bt, output
   
 
 def is_realtime(TSdict):
-  if (TSdict['MODE'] == 'TRADE') or (TSdict['MODE'] == 'SIMULATION'):
+  if (TSdict['SESSION']['mode'] == 'trade') or (TSdict['SESSION']['mode'] == 'simulation'):
     return True
   else:
     return False
@@ -53,7 +52,7 @@ def is_backtest(TSdict):
   return not is_realtime(TSdict)
 
 def is_trade(TSdict):
-  if (TSdict['MODE'] == 'TRADE'):
+  if (TSdict['SESSION']['mode'] == 'trade'):
     return True
   else:
     return False
@@ -61,11 +60,11 @@ def is_trade(TSdict):
 def strategy_selector(TSdict):
   """ Function to load the chosen strategy """
 
-  if (TSdict['strategy'] == 'basic'):
+  if (TSdict['STRATEGY']['name'] == 'basic'):
     from panterbot.strategies.basic import seektrade as CurrentStrategy
   
   
-  if (TSdict['strategy'] == 'macd_ema'):
+  if (TSdict['STRATEGY']['name'] == 'macd_ema'):
     from panterbot.strategies.macd_ema import Strat_Macd_Ema as CurrentStrategy
     print('Imported strat')
     return CurrentStrategy

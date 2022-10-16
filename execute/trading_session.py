@@ -5,7 +5,7 @@ from panterbot.data.fetch import get_data
 def trading_session(TSDict):
 
   # Selector
-  if (TSDict['strategy'] == 'basic'):
+  if (TSDict['STRATEGY']['name'] == 'basic'):
     from panterbot.strategies.basic import seektrade as seektrade 
     from panterbot.strategies.basic import seekexit as seekexit
 

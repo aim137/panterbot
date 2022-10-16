@@ -7,11 +7,28 @@ import keys
 
 client = Client(keys.api_key,keys.secret_key)
 
-def get_data(symbol='BTCGBP',interval='1m',lookback='30 m ago GMT'):
+def get_data(TSdict):
   """ function to get data
   """
 
-  frame = pd.DataFrame(client.get_historical_klines(symbol,interval,lookback))
+  if 'coin' in TSdict['DATA'].keys():
+    symbol = TSdict['DATA']['coin']
+  else:
+    symbol = 'ETHGBP'
+  if 'interval' in TSdict['DATA'].keys():
+    interval = TSdict['DATA']['interval']
+  else:
+    interval = '4h'
+  if 'start_date' in TSdict['DATA'].keys():
+    start_date = TSdict['DATA']['start_date']
+  else:
+    start_date = '100 day ago GMT'
+    
+  print(symbol)
+  print(interval)
+  print(start_date)
+
+  frame = pd.DataFrame(client.get_historical_klines(symbol,interval,start_date))
   frame = frame.iloc[:,:6]
   frame.columns = ['Time','Open','High','Low','Close','Volume']
   frame = frame.set_index('Time')
