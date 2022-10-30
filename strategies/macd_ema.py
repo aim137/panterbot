@@ -7,6 +7,9 @@ import ta
 class Strat_Macd_Ema(Strategy):
   """ Strategy Class which inherits from the class Strategy
       as defined in the backtesting library. """
+  # Class variables:
+  stop_loss = 0.97
+  take_profit = 1.045
 
   def init(self):
     close = self.data.Close
@@ -17,6 +20,6 @@ class Strat_Macd_Ema(Strategy):
   def next(self):
     price = self.data.Close
     if crossover(self.macd, self.macd_signal) and price > self.ema:
-      sl = price * 0.97
-      tp = price * 1.045
+      sl = price * self.stop_loss
+      tp = price * self.take_profit
       self.buy(sl=sl,tp=tp)

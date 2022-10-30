@@ -3,6 +3,12 @@ from panterbot.data.fetch import get_data
 from backtesting import Backtest, Strategy
 from backtesting.lib import crossover
 import ta
+import os
+from datetime import datetime
+import json
+
+#<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+#<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 
 def go(TSdict):
 
@@ -20,6 +26,8 @@ def go(TSdict):
   print('Profit: '+str((compound-1)*100)+'%')
   return compound
 
+#<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+#<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 
 def test(TSdict):
   """ Function to run backtests. It will instanciate
@@ -29,18 +37,29 @@ def test(TSdict):
   if is_realtime(TSdict):
     print('This function is for tests, not for running in real time')
     return
- 
+  
+  setup_directory(TSdict)
+
   CurrentStrategy = strategy_selector(TSdict)
   df = get_data(TSdict)
   bt = Backtest(df,CurrentStrategy,
                 cash=TSdict['SESSION']['cash'],
                 commission=TSdict['SESSION']['commission'])
-  output = bt.run()
-  print(output)
-  bt.plot()
+  
+  tuning = TSdict['STRATEGY']['tuning'].copy()
+
+  if is_optimize(TSdict):
+    print('optimizando wacho')
+    output = bt.optimize(**tuning)
+  else:
+    output = bt.run(**tuning)
+  #print(output)
+  #bt.plot()
 
   return bt, output
   
+#<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+#<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 
 def is_realtime(TSdict):
   if (TSdict['SESSION']['mode'] == 'trade') or (TSdict['SESSION']['mode'] == 'simulation'):
@@ -57,6 +76,23 @@ def is_trade(TSdict):
   else:
     return False
 
+def is_optimize(TSdict):
+  if (TSdict['SESSION']['submode'] == 'optimize'):
+    return True
+  else:
+    return False
+
+def setup_directory(TSdict):
+  tag = datetime.today().strftime('%Y%m%d-%H.%M.%S')
+  os.system('mkdir '+str(tag))
+  with open(str(tag)+'/input','w') as f:
+    for k in TSdict:
+      f.write('key: '+str(k)+'\n')
+      f.write(json.dumps(TSdict[k]))
+      f.write('\n')
+
+#<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+
 def strategy_selector(TSdict):
   """ Function to load the chosen strategy """
 
@@ -66,5 +102,5 @@ def strategy_selector(TSdict):
   
   if (TSdict['STRATEGY']['name'] == 'macd_ema'):
     from panterbot.strategies.macd_ema import Strat_Macd_Ema as CurrentStrategy
-    print('Imported strat')
+    print('Imported strategy: '+TSdict['STRATEGY']['name'])
     return CurrentStrategy
