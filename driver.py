@@ -106,3 +106,13 @@ def strategy_selector(TSdict):
     from panterbot.strategies.macd_ema import Strat_Macd_Ema as CurrentStrategy
     print('Imported strategy: '+TSdict['STRATEGY']['name'])
     return CurrentStrategy
+  
+  if (TSdict['STRATEGY']['name'] == 'quick_reversal'):
+    from panterbot.strategies.quick_reversal import Quick_Reversal as CurrentStrategy
+    print('Imported strategy: '+TSdict['STRATEGY']['name'])
+    return CurrentStrategy
+  
+  if (TSdict['STRATEGY']['name'] == 'sma_cross'):
+    from panterbot.strategies.sma_cross import Sma_Cross as CurrentStrategy
+    print('Imported strategy: '+TSdict['STRATEGY']['name'])
+    return CurrentStrategy
