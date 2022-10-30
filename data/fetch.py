@@ -7,7 +7,7 @@ import keys
 
 client = Client(keys.api_key,keys.secret_key)
 
-def get_data(TSdict):
+def get_data(TSdict,override_date=None):
   """ function to get data
   """
 
@@ -23,10 +23,10 @@ def get_data(TSdict):
     start_date = TSdict['DATA']['start_date']
   else:
     start_date = '100 day ago GMT'
-    
-  print(symbol)
-  print(interval)
-  print(start_date)
+
+  if override_date is not None:
+    start_date = override_date
+    print(f'Getting data for {symbol} in the {interval} time frame since date {start_date}')
 
   frame = pd.DataFrame(client.get_historical_klines(symbol,interval,start_date))
   frame = frame.iloc[:,:6]

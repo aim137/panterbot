@@ -1,4 +1,5 @@
 from panterbot.execute.trading_session import trading_session
+from panterbot.execute.trading_session import TradingSession
 from panterbot.data.fetch import get_data
 from backtesting import Backtest, Strategy
 from backtesting.lib import crossover
@@ -16,15 +17,12 @@ def go(TSdict):
     key = input('Vas a usar dinero real? \n')
     #if (key != 'paga la panter'): return
 
-  outcome_list = trading_session(TSdict)
-  print('Losses: '+str(outcome_list.count('loss')))
-  print('Wins: '+str(outcome_list.count('profit')))
-  compound = 1
-  for i in range(len(outcome_list)):
-    if (outcome_list[i] == 'loss'): compound *= (1-TSdict['margin_loss'])
-    if (outcome_list[i] == 'profit'): compound *= (1+TSdict['margin_profit'])
-  print('Profit: '+str((compound-1)*100)+'%')
-  return compound
+  df_init = get_data(TSdict,override_date='1 day ago GMT')
+  CurrentStrategy = strategy_selector(TSdict)
+  ts = TradingSession(df_init,CurrentStrategy)
+  ts.run(TSdict)
+
+  return
 
 #<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 #<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
@@ -114,5 +112,10 @@ def strategy_selector(TSdict):
   
   if (TSdict['STRATEGY']['name'] == 'sma_cross'):
     from panterbot.strategies.sma_cross import Sma_Cross as CurrentStrategy
+    print('Imported strategy: '+TSdict['STRATEGY']['name'])
+    return CurrentStrategy
+  
+  if (TSdict['STRATEGY']['name'] == 'rt_sma_cross'):
+    from panterbot.strategies.rt_sma_cross import RTSma_Cross as CurrentStrategy
     print('Imported strategy: '+TSdict['STRATEGY']['name'])
     return CurrentStrategy

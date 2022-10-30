@@ -1,6 +1,29 @@
 import time
 import panterbot.driver as pb
 from panterbot.data.fetch import get_data
+import pandas as pd
+
+
+class TradingSession():
+
+  def __init__(self,
+               data: pd.DataFrame,
+               strategy):
+    self.data = data
+    self.data.drop(self.data.head(1).index,inplace=True)
+    self.strategy = strategy
+
+  def run(self,TSdict):
+    l_session_running = True
+    l_trade_open = False
+    strat = self.strategy(TSdict)
+    while l_session_running:
+      time.sleep(300)
+      data = get_data(TSdict)
+      self.data = self.data.append(data)
+      l_buy,l_sell = strat.evaluate(self.data,l_trade_open) 
+      print(str(self.data.index[-1])+'  '+str(l_buy)+'  '+str(l_sell))
+
 
 def trading_session(TSDict):
 
