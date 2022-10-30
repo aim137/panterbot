@@ -49,10 +49,11 @@ def test(TSdict):
   tuning = TSdict['STRATEGY']['tuning'].copy()
 
   if is_optimize(TSdict):
-    print('optimizando wacho')
     output = bt.optimize(**tuning)
+    bt.plot(filename=tag+'/plot.html')
   else:
     output = bt.run(**tuning)
+    bt.plot(filename=tag+'/plot.html')
   #print(output)
   #bt.plot()
 
@@ -83,6 +84,7 @@ def is_optimize(TSdict):
     return False
 
 def setup_directory(TSdict):
+  global tag
   tag = datetime.today().strftime('%Y%m%d-%H.%M.%S')
   os.system('mkdir '+str(tag))
   with open(str(tag)+'/input','w') as f:
