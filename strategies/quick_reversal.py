@@ -24,7 +24,7 @@ class Quick_Reversal(Strategy):
     self.new_df['signal'] = (self.new_df[desc_l] > 0) & (self.new_df[desc_s] < -0.015)
     print(self.new_df)
 
-  def rt_next(self):
+  def next(self):
   
     if (self.data.index.shape[0] < 1+self.delta_t_long): return
     price = self.data.Close

@@ -1,6 +1,7 @@
 import time
 import panterbot.driver as pb
 from panterbot.data.fetch import get_data
+from panterbot.auxlib.functions import is_realtime,is_backtest
 import pandas as pd
 
 
@@ -23,9 +24,39 @@ class TradingSession():
       self.data = self.data.append(data)
       l_buy,l_sell = strat.evaluate(self.data,l_trade_open) 
       print(str(self.data.index[-1])+'  '+str(l_buy)+'  '+str(l_sell))
+      if l_buy:
+        l_trade_open = True
+        print('Bought at price: '+str(self.data.Close[-1]))
+      if l_sell:
+        l_trade_open = False
+        print('Sold at price: '+str(self.data.Close[-1]))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 def trading_session(TSDict):
+  """ OLD FUNCTION TO BE DEPRECATED """
 
   # Selector
   if (TSDict['STRATEGY']['name'] == 'basic'):
@@ -39,22 +70,10 @@ def trading_session(TSDict):
   l_trade_open=False
   t_skip = None
   outcome_list = []
-  l_mode_RT = pb.is_realtime(TSDict)
-
- #estoy tratando de unificar las dos.. no se si tene sentido igual...
- #while l_session_running:
- #  if not l_mode_RT:
- #    #then it is a BT (backtest) - I get all data at once
- #    data = get_data(lookback='111440 min ago GMT')
- #  if not l_trade_open:
- #    if l_mode_RT: data = get_data()
+  l_mode_RT = is_realtime(TSDict)
 
 
-
-
-
-
-  if pb.is_realtime(TSDict):
+  if is_realtime(TSDict):
     while l_session_running:
       if not l_trade_open:
         data = get_data()
@@ -68,7 +87,7 @@ def trading_session(TSDict):
         l_trade_open, objeto = seekexit(data,TSDict,objeto)
         if not l_trade_open : outcome_list.append(objeto['outcome'])
 
-  if pb.is_backtest(TSDict):
+  if is_backtest(TSDict):
     data = get_data(lookback='11117 min ago GMT')
     for t in range(30,len(data)):
       simul_time = data.index[t]

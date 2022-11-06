@@ -1,16 +1,13 @@
 from backtesting import Strategy
-from backtesting.lib import crossover
 import pandas as pd
 import ta
 
-def SMA(values, n):
+def calc_sma(values, n):
     """
     Return simple moving average of `values`, at
     each step taking into account `n` previous values.
     """
     return pd.Series(values).rolling(n).mean()
-
-
 
 class RTSma_Cross():
     
@@ -25,15 +22,15 @@ class RTSma_Cross():
       l_buy = False
       l_sell = False
       # calculate sma1 and sma2 using `data`
-      _series = SMA(pd.Series(data.Close),self.n1)
-      sma1 = _series[-1]
-      _series = SMA(pd.Series(data.Close),self.n2)
-      sma2 = _series[-1]
+      _series = calc_sma(pd.Series(data.Close),self.n1)
+      sma1 = _series[-1] # short
+      _series = calc_sma(pd.Series(data.Close),self.n2)
+      sma2 = _series[-1] # long
 
-      if not l_trade_open and crossover(sma1, sma2):
+      if not l_trade_open and (sma1 > sma2):
         l_buy = True
 
-      elif l_trade_open and crossover(sma2, sma1):
+      elif l_trade_open and (sma2 > sma1):
         l_sell = True
       
     # elif l_trade_open and self.data.Close[-1] < self.price * self.sl:

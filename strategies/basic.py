@@ -1,5 +1,6 @@
 import pandas as pd
 import panterbot.driver as pb
+from panterbot.autlib.functions import is_realtime,is_backtest
 from panterbot.data.fetch import get_data
 
 def seektrade(data_frame,TSDict):
@@ -27,10 +28,10 @@ def seekexit(data_frame,TSDict,objeto):
   margin_profit = TSDict['margin_profit']
   margin_loss   = TSDict['margin_loss']
 
-  if pb.is_realtime(TSDict):
+  if is_realtime(TSDict):
     data_for_exit = get_data(lookback='30 m ago GMT')
     data_since_buy = data_for_exit.loc[data_for_exit.index > objeto['open_time']]
-  if pb.is_backtest(TSDict):
+  if is_backtest(TSDict):
     data_since_buy = data_frame.loc[data_frame.index > objeto['open_time']]
 
   if len(data_since_buy) > 0:
