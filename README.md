@@ -1,13 +1,18 @@
 # Crypto trading bot
 
 This is a python library to backtest strategies in the crypto exchange. It also allows to simulate in real time and to execute orders via the Binance API. However, all of it is under development and must NOT, as of now, be used with real money.
+ 
+This code makes use of libraries such as binance, backtesting, ta, etc.
 
 ## Installation
 
-clone repo
-cd to repo
 
 ```bash
+pip install Backtesting
+pip install python-binance
+pip install ta
+clone repo
+cd to repo
 pip install -e .
 ```
 
@@ -57,3 +62,5 @@ Please make sure to update tests as appropriate.
 
 This code belongs in the public domain. You are welcome to take this code and treat is as your own. 
 The code is provided "as is" and must NOT be used with real money.
+
+I am not a financial professional and this does not constitute in any way financial advice.
