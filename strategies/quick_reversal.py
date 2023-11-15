@@ -22,7 +22,6 @@ class Quick_Reversal(Strategy):
     desc_s = str(self.delta_t_short)+'m_ret'
     self.new_df[desc_s] = self.new_df.Close / self.new_df.Close.shift(self.delta_t_short) - 1
     self.new_df['signal'] = (self.new_df[desc_l] > 0) & (self.new_df[desc_s] < -0.015)
-    print(self.new_df)
 
   def next(self):
   

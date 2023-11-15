@@ -46,11 +46,12 @@ def test(TSdict):
 
   if is_optimize(TSdict):
     output = bt.optimize(**tuning)
-    bt.plot(filename=tag+'/plot.html')
+ #  bt.plot(filename=tag+'/plot.html')
   else:
     output = bt.run(**tuning)
-    bt.plot(filename=tag+'/plot.html')
-  #print(output)
+ #  bt.plot(filename=tag+'/plot.html')
+  with open (tag+'/output','w') as f:
+   f.write(output.__repr__())
   #bt.plot()
 
   return bt, output
